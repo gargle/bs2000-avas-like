@@ -1,0 +1,37 @@
+name: a sample cobol run
+
+on:
+  push:
+    branch:
+      master
+  schedule:
+    - cron: '0 */6 * * 1-6'
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # set timezone
+      - uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Europe/Brussels"
+      # show current time
+      - name: show time
+        run: date
+      # fetch code
+      - uses: actions/checkout@v3
+      # prepare our cobol environment
+      - name: Install cobol
+        run: sudo apt-get install gnucobol
+      # show current cobol compiler
+      - name: Cobol version
+        run: cobc -V
+      # compile the cobol sources we need
+      - name: Cobol compile
+        run: make 
+      # run our cobol batch to read a file and display its contents
+      - name: Run initialise_history.sh
+        run: |-
+          ls -halt ./la10a.sh
+          ./la10a.sh
