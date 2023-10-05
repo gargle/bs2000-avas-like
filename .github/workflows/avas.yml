@@ -31,7 +31,7 @@ jobs:
       - name: Cobol compile
         run: make 
       # run our cobol batch to read a file and display its contents
-      - name: Run initialise_history.sh
+      - name: Run la10a.sh
         run: |-
           ls -halt ./la10a.sh
           ./la10a.sh
