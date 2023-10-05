@@ -4,8 +4,8 @@ on:
   push:
     branch:
       master
-  schedule:
-    - cron: '0 */6 * * 1-6'
+  #schedule:
+  #  - cron: '0 */6 * * 1-6'
 
 jobs:
 
