@@ -31,6 +31,7 @@ jobs:
       - name: Cobol compile
         run: make 
       # run our cobol batch to read a file and display its contents
+      # make sure to do a git update-index --chmod=+x la10a.sh
       - name: Run la10a.sh
         run: |-
           ls -halt ./la10a.sh
