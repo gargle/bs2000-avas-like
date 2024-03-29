@@ -1,4 +1,4 @@
-FROM alpine
+FROM ubuntu
 
-RUN apt update -y
+RUN apt update
 RUN apt install gnucobol4
