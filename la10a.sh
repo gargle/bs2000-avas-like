@@ -6,4 +6,8 @@ set -ex
 echo read a file and display its contents
 export DD_FILE_IN=./la10a.fil
 
-echo "Johan" | ./la10a
+cat <<END_OF_INPUT |
+Johan
+END_OF_INPUT
+./la10a
+
