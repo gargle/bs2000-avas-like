@@ -21,6 +21,9 @@ jobs:
         run: date
       # fetch code
       - uses: actions/checkout@v3
+      - name: make sure our working copy is up to date
+        run: |-
+          git pull
       # prepare our cobol environment
       - name: Install cobol
         run: sudo apt-get install gnucobol
