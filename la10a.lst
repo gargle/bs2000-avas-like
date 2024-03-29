@@ -1,0 +1,162 @@
+GnuCOBOL 4.0-early-dev. la10a.cob                                                     Fri Mar 29 09:00:17 2024  Page 0001
+
+LINE    PG/LN  A...B............................................................SEQUENCE
+
+000001         IDENTIFICATION DIVISION.
+000002         PROGRAM-ID. LA10A.
+000003        *
+000004        *    A program to ask for a name, say hello world, and show the contents
+000005        *    of a file.
+000006        *
+000007        *    To compile, type make, or use
+000008        *
+000009        *    cobc -x -Wall la10a.cob abend.cob -T la10a.lst -Xref
+000010        *
+000011        *    To show a file in hexadecimal, use
+000012        *
+000013        *    od -A x -t x1z -v la10a.fil
+000014        *
+000015         ENVIRONMENT DIVISION.
+000016         CONFIGURATION SECTION.
+000017         SPECIAL-NAMES.
+000018             CONSOLE IS TERM.
+000019         REPOSITORY.
+000020             FUNCTION ALL INTRINSIC.
+000021         INPUT-OUTPUT SECTION.
+000022         FILE-CONTROL.
+000023        *    export DD_FILE_IN=./la10a.fil
+000024             SELECT FILE_IN ASSIGN TO "DD_FILE_IN"
+000025             ORGANIZATION IS LINE SEQUENTIAL
+000026             FILE STATUS IS FILE_IN-STATUS.
+000027         DATA DIVISION.
+000028         FILE SECTION.
+000029         FD  FILE_IN
+000030             RECORD IS VARYING IN SIZE
+000031             FROM 0 TO 32768 DEPENDING ON FILE_IN-SIZE.
+000032         01  FILE_IN-RECORD.
+000033             02  PIC X OCCURS 0 TO 32768 DEPENDING ON FILE_IN-SIZE.
+000034         WORKING-STORAGE SECTION.
+000035         01  FILE_IN-STATUS                         PIC XX.
+000036             88  FILE_IN-OK                         VALUE "00".
+000037             88  FILE_IN-EOF                        VALUE "10".
+000038         01  FILE_IN-SIZE                           PIC 9(5).
+000039         77  WS-NAME                                PIC X(64).
+000040         PROCEDURE DIVISION.
+000041         0000-MAIN.
+000042             DISPLAY "WHAT'S YOUR NAME ?" UPON TERM.
+000043             ACCEPT WS-NAME FROM TERM.
+000044             IF WS-NAME = SPACES THEN
+000045                 DISPLAY "NO NAME GIVEN" UPON STDERR
+000046                 CALL "ABEND".
+000047             DISPLAY "HELLO WORLD, " TRIM(WS-NAME) "!" UPON TERM.
+000048         0010-FILE_IN.
+000049             OPEN INPUT FILE_IN.
+000050         0020-FILE_IN-READ.
+000051             READ FILE_IN
+000052                 AT END GO TO 0030-FILE_IN-EOF.
+GnuCOBOL 4.0-early-dev. la10a.cob                                                     Fri Mar 29 09:00:17 2024  Page 0002
+
+LINE    PG/LN  A...B............................................................SEQUENCE
+
+000053             IF FILE_IN-OK THEN
+000054                 DISPLAY FILE_IN-RECORD UPON TERM
+000055             ELSE
+000056                 DISPLAY "SOME ERROR OCCURED : " FILE_IN-STATUS
+000057                     UPON STDERR
+000058                 CALL "ABEND".
+000059             GO TO 0020-FILE_IN-READ.
+000060         0030-FILE_IN-EOF.
+000061             CLOSE FILE_IN.
+000062         9999-EXIT.
+000063             STOP RUN.
+GnuCOBOL 4.0-early-dev. la10a.cob                                                     Fri Mar 29 09:00:17 2024  Page 0003
+
+NAME                           DEFINED                                    REFERENCES
+
+FILE_IN                        24       29      49      51      61
+FILE_IN-RECORD                 32       54
+
+FILE_IN-STATUS                 35       26      56
+FILE_IN-OK                     36       53
+FILE_IN-EOF                    37     not referenced
+FILE_IN-SIZE                   38       31      33
+WS-NAME                        39       43      44      47
+
+GnuCOBOL 4.0-early-dev. la10a.cob                                                     Fri Mar 29 09:00:17 2024  Page 0004
+
+LABEL                          DEFINED                                    REFERENCES
+
+E LA10A                        40
+P 0000-MAIN                    41     not referenced
+P 0010-FILE_IN                 48     not referenced
+P 0020-FILE_IN-READ            50       59
+P 0030-FILE_IN-EOF             60       52
+P 9999-EXIT                    62     not referenced
+GnuCOBOL 4.0-early-dev. la10a.cob                                                     Fri Mar 29 09:00:17 2024  Page 0005
+
+FUNCTION                       TYPE                                       REFERENCES
+
+L ABEND                        EXTERN   46      58
+
+0 warnings in compilation group
+0 errors in compilation group
+GnuCOBOL 4.0-early-dev. abend.cob                                                     Fri Mar 29 09:00:17 2024  Page 0001
+
+LINE    PG/LN  A...B............................................................SEQUENCE
+
+000001         IDENTIFICATION DIVISION.
+000002         PROGRAM-ID. ABEND.
+000003        *
+000004        *    A program to call to abend abnormally
+000005        *
+000006         ENVIRONMENT DIVISION.
+000007         CONFIGURATION SECTION.
+000008         DATA DIVISION.
+000009         WORKING-STORAGE SECTION.
+000010         01  WS-ALL-ASTERISKS          PIC X(79) VALUE ALL "*".
+000011         01  WS-BOX-ASTERISKS.
+000012             03  FILLER                PIC X(01) VALUE "*".
+000013             03  FILLER                PIC X(03) VALUE ALL SPACES.
+000014             03  WS-BOX-ASTERISKS-TEXT PIC X(71) VALUE ALL SPACES.
+000015             03  FILLER                PIC X(03) VALUE ALL SPACES.
+000016             03  FILLER                PIC X(01) VALUE "*".
+000017        *
+000018         77  WS-TERMINATION-MESSAGE    PIC X(71) VALUE ALL SPACES.
+000019        *
+000020         PROCEDURE DIVISION.
+000021         0000-MAIN.
+000022             DISPLAY WS-ALL-ASTERISKS UPON STDERR.
+000023             DISPLAY WS-BOX-ASTERISKS UPON STDERR.
+000024             MOVE "A B N O R M A L   E N D" TO WS-TERMINATION-MESSAGE.
+000025             CALL "C$JUSTIFY" USING WS-TERMINATION-MESSAGE, "C"
+000026             MOVE WS-TERMINATION-MESSAGE TO WS-BOX-ASTERISKS-TEXT.
+000027             DISPLAY WS-BOX-ASTERISKS UPON STDERR.
+000028             MOVE ALL SPACES TO WS-BOX-ASTERISKS-TEXT.
+000029             DISPLAY WS-BOX-ASTERISKS UPON STDERR.
+000030             DISPLAY WS-ALL-ASTERISKS  UPON STDERR.
+000031         9999-ABNORMAL-END.
+000032             STOP RUN WITH ERROR STATUS 255.
+GnuCOBOL 4.0-early-dev. abend.cob                                                     Fri Mar 29 09:00:17 2024  Page 0002
+
+NAME                           DEFINED                                    REFERENCES
+
+WS-ALL-ASTERISKS               10       22      30
+WS-BOX-ASTERISKS               11       23      27      29
+WS-BOX-ASTERISKS-TEXT          14      *26     *28
+WS-TERMINATION-MESSAGE         18      *24      25      26
+
+GnuCOBOL 4.0-early-dev. abend.cob                                                     Fri Mar 29 09:00:17 2024  Page 0003
+
+LABEL                          DEFINED                                    REFERENCES
+
+E ABEND                        20
+P 0000-MAIN                    21     not referenced
+P 9999-ABNORMAL-END            31     not referenced
+GnuCOBOL 4.0-early-dev. abend.cob                                                     Fri Mar 29 09:00:17 2024  Page 0004
+
+FUNCTION                       TYPE                                       REFERENCES
+
+L C$JUSTIFY                    SYSTEM   25
+
+0 warnings in compilation group
+0 errors in compilation group

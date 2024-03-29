@@ -44,7 +44,7 @@
            IF WS-NAME = SPACES THEN
                DISPLAY "NO NAME GIVEN" UPON STDERR
                CALL "ABEND".
-           DISPLAY "HELLO " TRIM(WS-NAME) "!" UPON TERM.
+           DISPLAY "HELLO WORLD, " TRIM(WS-NAME) "!" UPON TERM.
        0010-FILE_IN.
            OPEN INPUT FILE_IN.
        0020-FILE_IN-READ.
