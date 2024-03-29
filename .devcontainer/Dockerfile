@@ -1,4 +1,4 @@
 FROM ubuntu
 
 RUN apt update
-RUN apt install gnucobol4
+RUN apt install -y gnucobol4
