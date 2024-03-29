@@ -4,4 +4,4 @@ ARG VARIANT="bookworm"
 FROM mcr.microsoft.com/devcontainers/base:${VARIANT}
 
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends gnucobol4
+    && apt-get -y install --no-install-recommends gnucobol4 emacs
